@@ -1,26 +1,24 @@
-import { SVD_Blockchain } from "./blockchain.js";
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 
-const SURNAME = "shchehlov";
-const MONTH_OF_BIRTH = 10;
-const DAY_OF_BIRTH = 13;
-const YEAR_OF_BIRTH = 2003;
+import { newTransactionController } from "./controllers/new-transaction.js";
+import { chainController } from "./controllers/chain.js";
+import { mineController } from "./controllers/mine.js";
 
-const nonce = parseInt(`${DAY_OF_BIRTH}${MONTH_OF_BIRTH}${YEAR_OF_BIRTH}`);
+const PORT = 3001
 
-const BlockChain = new SVD_Blockchain(nonce, SURNAME);
+const routes = [
+  { route: '/transaction/new', method: 'POST', action: newTransactionController},
+  { route: '/mine', method: 'GET', action: mineController },
+  { route: '/chain', method: 'GET', action: chainController },
+]
 
-const firstBlock = BlockChain.SVD_getLastBlock();
+createServer((req: IncomingMessage, res: ServerResponse) => {
+  const matchingRoute = routes.find(r => r.route === req.url && r.method === req.method);
 
-BlockChain.SVD_newBlock(firstBlock.currentHash);
-
-BlockChain.SVD_newTransaction({
-  sender: "vlad",
-  recipient: "someone",
-  amount: 5,
-});
-
-const secondBlock = BlockChain.SVD_getLastBlock();
-
-BlockChain.SVD_newBlock(secondBlock.currentHash);
-
-console.log(BlockChain);
+  if (matchingRoute) {
+      matchingRoute.action(req, res);
+  } else {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('Not Found');
+  }
+}).listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

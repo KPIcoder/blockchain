@@ -1,5 +1,7 @@
-import { hash } from "./helpers.js";
-import { IBlock, ITransaction } from "./interfaces.js";
+import { IBlock, ITransaction } from "./blockchain.interface.js";
+import { generateRandomString } from "../helpers/string.js";
+import { hash } from "../helpers/hash.js";
+import { MONTH_OF_BIRTH } from "../constants/student-info.js";
 
 export class SVD_Blockchain {
   private SVD_currentTransactions: ITransaction[] = [];
@@ -11,6 +13,7 @@ export class SVD_Blockchain {
     const persistedNonce = nonce ?? 13102003;
     const persistedSecret = secret ?? "Shchehlov";
 
+    
     this.SVD_createGenesisBlock(persistedNonce, persistedSecret);
   }
 
@@ -66,10 +69,18 @@ export class SVD_Blockchain {
   }
 
   private SVD_createGenesisBlock(nonce: number, secret: string) {
+    
+    // miner`s prize
+    this.SVD_newTransaction({
+      sender: '0',
+      recipient: generateRandomString(),
+      amount: MONTH_OF_BIRTH
+    })
+
     const partialBlock: Omit<IBlock, "previousHash" | "currentHash"> = {
       index: this.SVD_chain.length,
       timestamp: Date.now(),
-      transactions: [],
+      transactions: this.SVD_currentTransactions,
       proof: nonce,
     };
 
@@ -86,5 +97,6 @@ export class SVD_Blockchain {
     };
 
     this.SVD_chain = [genesisBlock];
+    this.SVD_currentTransactions = []
   }
 }

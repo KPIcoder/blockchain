@@ -1,0 +1,1 @@
+export const generateRandomString = () => Math.floor(Math.random()  * 100000).toString(16)
