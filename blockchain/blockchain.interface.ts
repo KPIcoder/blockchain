@@ -12,3 +12,5 @@ export interface ITransaction {
   recipient: string;
   amount: number;
 }
+
+export type BlockDTO = Omit<IBlock, "currentHash" | "transactions">;
