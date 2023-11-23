@@ -1,1 +1,4 @@
-export const generateRandomString = () => Math.floor(Math.random()  * 100000).toString(16)
+import { randomBytes } from "node:crypto";
+
+export const generateRandomString = (length?: number) =>
+  randomBytes(length ? length * 4 : 32).toString("hex");

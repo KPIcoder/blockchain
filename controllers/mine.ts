@@ -1,8 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-import { httpError } from "../server/index.js";
+import { httpError, parseUrl } from "../server/index.js";
 import { blockchain } from "../blockchain/index.js";
-import { generateRandomString } from "../helpers/string.js";
 import { MONTH_OF_BIRTH } from "../constants/student-info.js";
 
 export const mineController = (req: IncomingMessage, res: ServerResponse) => {
@@ -11,7 +10,10 @@ export const mineController = (req: IncomingMessage, res: ServerResponse) => {
     return;
   }
 
-  const minerAddress = generateRandomString();
+  const { query } = parseUrl(req.url);
+
+  const minerAddress = query.address as string;
+
   // miner`s prize
   blockchain.SVD_newTransaction({
     sender: "0", // defined for miners
@@ -20,6 +22,8 @@ export const mineController = (req: IncomingMessage, res: ServerResponse) => {
   });
   // all logic of calculating PoW is encapsulated in this method
   const newBlock = blockchain.SVD_newBlock();
+
+  console.log(req.url);
 
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");

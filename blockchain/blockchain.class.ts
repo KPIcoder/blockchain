@@ -35,6 +35,23 @@ export class SVD_Blockchain {
     return this.SVD_getLastBlock();
   }
 
+  public SVD_getBalance(address: string) {
+    const blockchainTransactions = this.SVD_chain.map(
+      (block) => block.transactions
+    ).flat();
+
+    let balance = 0;
+
+    for (let i = 0; i < blockchainTransactions.length; i++) {
+      if (blockchainTransactions[i].recipient === address)
+        balance += blockchainTransactions[i].amount;
+
+      if (blockchainTransactions[i].sender === address)
+        balance -= blockchainTransactions[i].amount;
+    }
+    return balance;
+  }
+
   public SVD_getLastBlock() {
     return this.SVD_chain.length > 0
       ? this.SVD_chain[this.SVD_chain.length - 1]

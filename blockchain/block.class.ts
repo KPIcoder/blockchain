@@ -1,10 +1,10 @@
 import { hash } from "../helpers/hash.js";
 import { nextBlockIndex } from "../helpers/sequence.js";
-import { BlockDTO, ITransaction } from "./blockchain.interface.js";
+import { BlockDTO, IBlock, ITransaction } from "./blockchain.interface.js";
 
 const SECRET = "10"; // defined by task
 
-export class SVD_Block {
+export class SVD_Block implements IBlock {
   index: number;
   timestamp: number;
   proof: number;
