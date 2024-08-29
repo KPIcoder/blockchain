@@ -10,9 +10,10 @@ import { balanceController } from "./controllers/balance.js";
 import { newTransactionController } from "./controllers/new-transaction.js";
 import { chainController } from "./controllers/chain.js";
 import { mineController } from "./controllers/mine.js";
+import { registerNodesController } from "./controllers/register-nodes.js";
+import { consensusController } from "./controllers/consensus.js";
 
-const PORT = 4001;
-
+const PORT = 4002;
 const routes = [
   { route: "/balance", method: "GET", action: balanceController },
   {
@@ -22,6 +23,8 @@ const routes = [
   },
   { route: "/mine", method: "GET", action: mineController },
   { route: "/chain", method: "GET", action: chainController },
+  { route: "/nodes/register", method: "POST", action: registerNodesController },
+  { route: "/nodes/resolve", method: "GET", action: consensusController },
 ];
 
 createServer((req: IncomingMessage, res: ServerResponse) => {

@@ -29,14 +29,14 @@ export class SVD_Block implements IBlock {
     let proof = this.proof;
     let currentHash = SVD_Block.hash(block);
 
-    while (!this.SVD_isValidProof(currentHash)) {
+    while (!SVD_Block.SVD_isValidProof(currentHash)) {
       proof++;
       currentHash = SVD_Block.hash({ ...block, proof });
     }
     return { proof, currentHash };
   }
 
-  private SVD_isValidProof(currentHash: string) {
+  static SVD_isValidProof(currentHash: string) {
     return currentHash.endsWith(SECRET);
   }
 
